@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 const DUMMY_MEALS = [
   {
@@ -27,11 +27,33 @@ const DUMMY_MEALS = [
   },
 ];
 
-const AuthContext = React.createContext({ meals: [] });
+const AuthContext = React.createContext({
+  meals: [],
+  isModalHidden: true,
+  onModalClose: () => {},
+  onModalOpen: () => {},
+});
 
 export const AuthContextProvider = (props) => {
+  const [isModalHidden, setIsModalHidden] = useState(true);
+
+  const closeModalHandler = () => {
+    setIsModalHidden(true);
+  };
+
+  const openModalHandler = () => {
+    setIsModalHidden(false);
+  };
+
   return (
-    <AuthContext.Provider value={{ meals: DUMMY_MEALS }}>
+    <AuthContext.Provider
+      value={{
+        meals: DUMMY_MEALS,
+        isModalHidden: isModalHidden,
+        onModalClose: closeModalHandler,
+        onModalOpen: openModalHandler,
+      }}
+    >
       {props.children}
     </AuthContext.Provider>
   );

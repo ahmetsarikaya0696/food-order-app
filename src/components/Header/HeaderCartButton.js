@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
 import styles from "./HeaderCartButton.module.css";
 import CartIcon from "../Cart/CartIcon";
+import AuthContext from "../../context/auth-context";
 
 const HeaderCartButton = () => {
+  const ctx = useContext(AuthContext);
+
   return (
-    <button className={styles.button}>
+    <button onClick={ctx.onModalOpen} className={styles.button}>
       <span className={styles.icon}>
         <CartIcon />
       </span>

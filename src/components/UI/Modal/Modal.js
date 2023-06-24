@@ -1,18 +1,18 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useContext } from "react";
+import ReactDOM from "react-dom";
 import styles from "./Modal.module.css";
 import Card from "../Card/Card";
+import AuthContext from "../../../context/auth-context";
 
 const Backdrop = (props) => {
-  return <div className={styles.backdrop} onClick={props.onModalClose}></div>;
+  const ctx = useContext(AuthContext);
+  return <div className={styles.backdrop} onClick={ctx.onModalClose}></div>;
 };
 
 const ModalOverlay = (props) => {
   return (
     <Card className={styles.modal}>
-      <footer className={styles.actions}>
-        <button onClick={props.onModalClose}>Close</button>
-        <button>Order</button>
-      </footer>
+      <div className={styles.content}>{styles.children}</div>
     </Card>
   );
 };
