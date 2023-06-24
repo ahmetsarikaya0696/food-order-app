@@ -32,10 +32,14 @@ const AuthContext = React.createContext({
   isModalHidden: true,
   onModalClose: () => {},
   onModalOpen: () => {},
+  cartState: {},
+  onAddOrder: (name, price, number) => {},
+  orders: [],
 });
 
 export const AuthContextProvider = (props) => {
   const [isModalHidden, setIsModalHidden] = useState(true);
+  const [orders, setOrders] = useState([]);
 
   const closeModalHandler = () => {
     setIsModalHidden(true);
@@ -45,6 +49,24 @@ export const AuthContextProvider = (props) => {
     setIsModalHidden(false);
   };
 
+  const addOrderHandler = (name, price, number) => {
+    setOrders((prevOrders) => {
+      const updatedOrders = [...prevOrders];
+
+      const existingOrderIndex = updatedOrders.findIndex(
+        (order) => order.name === name
+      );
+
+      if (existingOrderIndex !== -1) {
+        updatedOrders[existingOrderIndex].number += number;
+      } else {
+        updatedOrders.push({ name: name, price: price, number: number });
+      }
+
+      return updatedOrders;
+    });
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -52,6 +74,8 @@ export const AuthContextProvider = (props) => {
         isModalHidden: isModalHidden,
         onModalClose: closeModalHandler,
         onModalOpen: openModalHandler,
+        onAddOrder: addOrderHandler,
+        orders: orders
       }}
     >
       {props.children}

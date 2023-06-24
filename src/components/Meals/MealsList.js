@@ -5,7 +5,7 @@ import AuthContext from "../../context/auth-context";
 
 const MealList = () => {
   const ctx = useContext(AuthContext);
-
+  
   return (
     <Card>
       <ul>
