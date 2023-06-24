@@ -8,8 +8,8 @@ const Input = (props) => {
 
   return (
     <div className={styles.input}>
-      <label htmlFor={props.id}>{props.label}</label>
-      <input id={props.id} type={props.type} value={props.value} onChange={changeHandler} min={1} />
+      <label>{props.label}</label>
+      <input type={props.type} value={props.value} onChange={changeHandler} min={1} />
     </div>
   );
 };

@@ -11,6 +11,7 @@ const MealList = () => {
       <ul>
         {ctx.meals.map((meal) => (
           <MealItem
+            id={meal.id}
             key={meal.id}
             name={meal.name}
             description={meal.description}
