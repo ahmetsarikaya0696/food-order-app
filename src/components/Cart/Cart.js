@@ -27,7 +27,7 @@ const Cart = () => {
             {ctx.orders.reduce(
               (sum, order) => sum + order.price * order.number,
               0
-            )}
+            ).toFixed(2)}
           </div>
         </div>
         <div className={styles.actions}>
