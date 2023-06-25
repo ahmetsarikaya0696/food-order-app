@@ -16,7 +16,8 @@ function App() {
       <MealList />
       {!ctx.isModalHidden && (
         <Modal>
-          <Cart />
+          {ctx.orders.length > 0 && <Cart />}
+          {ctx.orders.length === 0 && <h3>Nothing ordered yet!</h3>}
         </Modal>
       )}
     </Fragment>

@@ -1,14 +1,18 @@
 import React, { useContext } from "react";
 import styles from "./Cart.module.css";
-import { Fragment } from "react";
 import CartItem from "./CartItem";
 import AuthContext from "../../context/auth-context";
 
 const Cart = () => {
   const ctx = useContext(AuthContext);
 
+  const submitOrderHandler = (event) => {
+    event.preventDefault();
+    console.log("Order has been given successfully!");
+  };
+
   return (
-    <Fragment>
+    <form onSubmit={submitOrderHandler}>
       <ul className={styles["cart-items"]}>
         {ctx.orders.map((order) => (
           <CartItem
@@ -24,20 +28,25 @@ const Cart = () => {
           <div>Total Amount</div>
           <div>
             $
-            {ctx.orders.reduce(
-              (sum, order) => sum + order.price * order.number,
-              0
-            ).toFixed(2)}
+            {ctx.orders
+              .reduce((sum, order) => sum + order.price * order.number, 0)
+              .toFixed(2)}
           </div>
         </div>
         <div className={styles.actions}>
-          <button onClick={ctx.onModalClose} className={styles["button--alt"]}>
+          <button
+            type="button"
+            onClick={ctx.onModalClose}
+            className={styles["button--alt"]}
+          >
             Close
           </button>
-          <button className={styles.button}>Order</button>
+          <button type="submiy" className={styles.button}>
+            Order
+          </button>
         </div>
       </div>
-    </Fragment>
+    </form>
   );
 };
 

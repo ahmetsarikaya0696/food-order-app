@@ -34,6 +34,7 @@ const AuthContext = React.createContext({
   onModalOpen: () => {},
   cartState: {},
   onAddOrder: (name, price, number) => {},
+  onRemoveOrder: (name, number) => {},
   orders: [],
 });
 
@@ -67,6 +68,24 @@ export const AuthContextProvider = (props) => {
     });
   };
 
+  const removeOrderHandler = (name, number) => {
+    setOrders((prevOrders) => {
+      const updatedOrders = [...prevOrders];
+
+      const existingOrderIndex = updatedOrders.findIndex(
+        (order) => order.name === name
+      );
+
+      if (updatedOrders[existingOrderIndex].number > 1) {
+        updatedOrders[existingOrderIndex].number -= 1;
+      } else {
+        updatedOrders.splice(existingOrderIndex, 1);
+      }
+
+      return updatedOrders;
+    });
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -75,7 +94,8 @@ export const AuthContextProvider = (props) => {
         onModalClose: closeModalHandler,
         onModalOpen: openModalHandler,
         onAddOrder: addOrderHandler,
-        orders: orders
+        onRemoveOrder: removeOrderHandler,
+        orders: orders,
       }}
     >
       {props.children}
