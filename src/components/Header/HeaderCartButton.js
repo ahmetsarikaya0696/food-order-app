@@ -1,14 +1,19 @@
 import React, { useContext, useEffect, useState } from "react";
 import styles from "./HeaderCartButton.module.css";
 import CartIcon from "../Cart/CartIcon";
-import AuthContext from "../../context/auth-context";
+import CartContext from "../../store/cart-context";
 
-const HeaderCartButton = () => {
-  const ctx = useContext(AuthContext);
+const HeaderCartButton = (props) => {
+  const cartCtx = useContext(CartContext);
+
+  const numberOfCartItems = cartCtx.items.reduce((sum, item) => {
+    return sum + item.amount;
+  }, 0);
+
   const [btnIsHighighted, setBtnIsHighlighted] = useState(false);
 
   useEffect(() => {
-    if (ctx.orders.length === 0) {
+    if (cartCtx.items.length === 0) {
       return;
     }
 
@@ -21,20 +26,18 @@ const HeaderCartButton = () => {
     return () => {
       clearTimeout(timer);
     };
-  }, [ctx.orders]);
+  }, [cartCtx.items]);
 
   return (
     <button
-      onClick={ctx.onModalOpen}
+      onClick={props.onShowCart}
       className={`${styles.button} ${btnIsHighighted && styles.bump}`}
     >
       <span className={styles.icon}>
         <CartIcon />
       </span>
       <span>Your Cart</span>
-      <span className={styles.badge}>
-        {ctx.orders.reduce((sum, order) => sum + order.number, 0)}
-      </span>
+      <span className={styles.badge}>{numberOfCartItems}</span>
     </button>
   );
 };

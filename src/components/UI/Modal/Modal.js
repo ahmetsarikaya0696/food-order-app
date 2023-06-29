@@ -1,12 +1,10 @@
-import React, { Fragment, useContext } from "react";
+import React, { Fragment } from "react";
 import ReactDOM from "react-dom";
 import styles from "./Modal.module.css";
 import Card from "../Card/Card";
-import AuthContext from "../../../context/auth-context";
 
 const Backdrop = (props) => {
-  const ctx = useContext(AuthContext);
-  return <div className={styles.backdrop} onClick={ctx.onModalClose}></div>;
+  return <div className={styles.backdrop} onClick={props.onHideCart}></div>;
 };
 
 const ModalOverlay = (props) => {
@@ -21,13 +19,11 @@ const Modal = (props) => {
   return (
     <Fragment>
       {ReactDOM.createPortal(
-        <Backdrop onModalClose={props.onModalClose} />,
+        <Backdrop onHideCart={props.onHideCart} />,
         document.getElementById("backdrop-root")
       )}
       {ReactDOM.createPortal(
-        <ModalOverlay onModalClose={props.onModalClose}>
-          {props.children}
-        </ModalOverlay>,
+        <ModalOverlay>{props.children}</ModalOverlay>,
         document.getElementById("overlay-root")
       )}
     </Fragment>

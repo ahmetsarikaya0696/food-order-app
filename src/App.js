@@ -1,26 +1,26 @@
-import React, { Fragment, useContext } from "react";
+import React, { useState } from "react";
 import Header from "./components/Header/Header";
-import MealsSummary from "./components/Meals/MealsSummary/MealsSummary";
-import MealList from "./components/Meals/MealsList";
-import Modal from "./components/UI/Modal/Modal";
-import AuthContext from "./context/auth-context";
 import Cart from "./components/Cart/Cart";
+import Meals from "./components/Meals/Meals";
+import CartProvider from "./store/CartProvider";
 
 function App() {
-  const ctx = useContext(AuthContext);
+  const [cartIsShown, setCartIsShown] = useState(false);
+
+  const showCartHandler = () => {
+    setCartIsShown(true);
+  };
+
+  const hideCartHandler = () => {
+    setCartIsShown(false);
+  };
 
   return (
-    <Fragment>
-      <Header />
-      <MealsSummary />
-      <MealList />
-      {!ctx.isModalHidden && (
-        <Modal>
-          {ctx.orders.length > 0 && <Cart />}
-          {ctx.orders.length === 0 && <h3>Nothing ordered yet!</h3>}
-        </Modal>
-      )}
-    </Fragment>
+    <CartProvider>
+      <Header onShowCart={showCartHandler} />
+      <Meals />
+      {cartIsShown && <Cart onHideCart={hideCartHandler} />}
+    </CartProvider>
   );
 }
 

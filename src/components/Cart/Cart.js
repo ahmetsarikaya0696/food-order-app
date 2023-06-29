@@ -1,52 +1,65 @@
 import React, { useContext } from "react";
 import styles from "./Cart.module.css";
 import CartItem from "./CartItem";
-import AuthContext from "../../context/auth-context";
+import Modal from "../UI/Modal/Modal";
+import CartContext from "../../store/cart-context";
 
-const Cart = () => {
-  const ctx = useContext(AuthContext);
+const Cart = (props) => {
+  const cartCtx = useContext(CartContext);
+  const totalAmount = `$ ${cartCtx.totalAmount.toFixed(2)}`;
 
-  const submitOrderHandler = (event) => {
+  const hasItems = cartCtx.items.length > 0;
+
+  const cartItemRemoveHandler = (id) => {
+    cartCtx.removeItem(id);
+  };
+
+  const cartItemAddHandler = (item) => {
+    cartCtx.addItem({ ...item, amount: 1 });
+  };
+
+  const cartItems = cartCtx.items.map((item) => (
+    <CartItem
+      key={item.id}
+      name={item.name}
+      amount={item.amount}
+      price={item.price}
+      onRemove={cartItemRemoveHandler.bind(null, item.id)}
+      onAdd={cartItemAddHandler.bind(null, item)}
+    />
+  ));
+
+  const submititemHandler = (event) => {
     event.preventDefault();
-    console.log("Order has been given successfully!");
+    console.log("item has been given successfully!");
   };
 
   return (
-    <form onSubmit={submitOrderHandler}>
-      <ul className={styles["cart-items"]}>
-        {ctx.orders.map((order) => (
-          <CartItem
-            key={order.name}
-            name={order.name}
-            price={(order.number * order.price).toFixed(2)}
-            number={order.number}
-          />
-        ))}
-      </ul>
-      <div>
-        <div className={styles.total}>
-          <div>Total Amount</div>
-          <div>
-            $
-            {ctx.orders
-              .reduce((sum, order) => sum + order.price * order.number, 0)
-              .toFixed(2)}
+    <Modal onHideCart={props.onHideCart}>
+      <form onSubmit={submititemHandler}>
+        <ul className={styles["cart-items"]}>{cartItems}</ul>
+        <div>
+          <div className={styles.total}>
+            <span>Total Amount</span>
+            <span>{totalAmount}</span>
+          </div>
+          <div className={styles.actions}>
+            <button
+              type="button"
+              onClick={props.onHideCart}
+              className={styles["button--alt"]}
+            >
+              Close
+            </button>
+            {hasItems && (
+              <button type="submit" className={styles.button}>
+                Order
+              </button>
+            )}
           </div>
         </div>
-        <div className={styles.actions}>
-          <button
-            type="button"
-            onClick={ctx.onModalClose}
-            className={styles["button--alt"]}
-          >
-            Close
-          </button>
-          <button type="submiy" className={styles.button}>
-            Order
-          </button>
-        </div>
-      </div>
-    </form>
+      </form>
+    </Modal>
   );
 };
 

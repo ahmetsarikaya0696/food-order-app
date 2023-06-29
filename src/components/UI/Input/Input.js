@@ -1,17 +1,13 @@
 import React from "react";
 import styles from "./Input.module.css";
 
-const Input = (props) => {
-  const changeHandler = (event) => {
-    props.onChange(event.target.value);
-  };
-
+const Input = React.forwardRef((props, ref) => {
   return (
     <div className={styles.input}>
-      <label>{props.label}</label>
-      <input type={props.type} value={props.value} onChange={changeHandler} min={1} />
+      <label htmlFor={props.input.id}>{props.input.label}</label>
+      <input ref={ref} {...props.input} />
     </div>
   );
-};
+});
 
 export default Input;
