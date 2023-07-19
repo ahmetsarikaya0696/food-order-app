@@ -1,48 +1,60 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import MealItem from "../MealItem/MealItem";
 import Card from "../../UI/Card/Card";
-
-const DUMMY_MEALS = [
-  {
-    id: "m1",
-    name: "Sushi",
-    description: "Finest fish and veggies",
-    price: 22.99,
-  },
-  {
-    id: "m2",
-    name: "Schnitzel",
-    description: "A german specialty!",
-    price: 16.5,
-  },
-  {
-    id: "m3",
-    name: "Barbecue Burger",
-    description: "American, raw, meaty",
-    price: 12.99,
-  },
-  {
-    id: "m4",
-    name: "Green Bowl",
-    description: "Healthy...and green...",
-    price: 18.99,
-  },
-];
+import useHttp from "../../../hooks/use-http";
 
 const AvailableMeals = () => {
-  const mealItems = DUMMY_MEALS.map((meal) => (
-    <MealItem
-      id={meal.id}
-      key={meal.id}
-      name={meal.name}
-      description={meal.description}
-      price={meal.price}
-    />
-  ));
+  const [meals, setMeals] = useState([]);
+  const { isLoading, error, sendRequest: fetchMeals } = useHttp();
+  useEffect(() => {
+    const transformMeals = (data) => {
+      const loadedMeals = [];
+
+      for (const key in data) {
+        loadedMeals.push({
+          id: key,
+          name: data[key].name,
+          description: data[key].description,
+          price: data[key].price,
+        });
+      }
+
+      setMeals(loadedMeals);
+    };
+
+    fetchMeals(
+      {
+        url: "https://react-http-6f76f-default-rtdb.europe-west1.firebasedatabase.app/meals.json",
+      },
+      transformMeals
+    );
+  }, [fetchMeals]);
+
+  let content = <h2>No meals found!</h2>;
+
+  if (meals.length > 0) {
+    content = meals.map((meal) => (
+      <MealItem
+        id={meal.id}
+        key={meal.id}
+        name={meal.name}
+        description={meal.description}
+        price={meal.price}
+      />
+    ));
+  }
+  
+  if(error){
+    content =  <h2>Error : {error}</h2>;
+  }
+
+  if(isLoading){
+    content = "Loading Meals...";
+  }
 
   return (
     <Card>
-      <ul>{mealItems}</ul>
+      <ul>{content}</ul>
     </Card>
   );
 };
