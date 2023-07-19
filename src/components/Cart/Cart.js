@@ -49,27 +49,28 @@ const Cart = (props) => {
             <span>Total Amount</span>
             <span>{totalAmount}</span>
           </div>
-          {!isCheckout && <div className={styles.actions}>
-            <button
-              type="button"
-              onClick={props.onHideCart}
-              className={styles["button--alt"]}
-            >
-              Close
-            </button>
-            {hasItems && (
+          {!isCheckout && (
+            <div className={styles.actions}>
               <button
-                type="submit"
-                className={styles.button}
-                onClick={orderHandler}
+                type="button"
+                onClick={props.onHideCart}
+                className={styles["button--alt"]}
               >
-                Order
+                Close
               </button>
-            )}
-          </div>}
+              {hasItems && (
+                <button
+                  type="submit"
+                  className={styles.button}
+                  onClick={orderHandler}
+                >
+                  Order
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </form>
-
       {isCheckout && <Checkout onOrderCancel={props.onHideCart} />}
     </Modal>
   );
