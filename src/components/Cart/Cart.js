@@ -12,6 +12,7 @@ const Cart = (props) => {
   const cartCtx = useContext(CartContext);
   const totalAmount = `$ ${cartCtx.totalAmount.toFixed(2)}`;
   const [isCheckout, setIsCheckout] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(false);
   const {
     isLoading: isSubmitting,
     error,
@@ -52,6 +53,7 @@ const Cart = (props) => {
     const notifyAndClearCart = () => {
       toast("An order has been received!");
       cartCtx.clearCart();
+      setIsCompleted(true);
     };
 
     createOrder(
@@ -116,7 +118,8 @@ const Cart = (props) => {
     <Modal onHideCart={props.onHideCart}>
       {isSubmitting && !error && isSubmittingContent}
       {error && errorFoundContent}
-      {!isSubmitting && !error && content}
+      {!isSubmitting && !error && !isCompleted && content}
+      {!isSubmitting && !error && isCompleted && <h3>Your order has been recived!</h3>}
     </Modal>
   );
 };
