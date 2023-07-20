@@ -52,32 +52,55 @@ const Checkout = (props) => {
       return;
     }
 
+    props.onConfirm({
+      name: enteredName,
+      street: enteredStreet,
+      city: enteredCity,
+      postalCode: enteredPostalCode,
+    });
+
     console.log("Form submitted!");
   };
 
   return (
     <form className={styles.form} onSubmit={submitHandler}>
-      <div className={`${styles.control} ${!formInputValidity.nameIsValid && styles.invalid}`}>
+      <div
+        className={`${styles.control} ${
+          !formInputValidity.nameIsValid && styles.invalid
+        }`}
+      >
         <label htmlFor="name">Your Name</label>
         <input ref={nameInputRef} type="text" id="name" />
         {!formInputValidity.nameIsValid && <p>Name field is not valid!</p>}
       </div>
-      <div className={`${styles.control} ${!formInputValidity.streetIsValid && styles.invalid}`}>
+      <div
+        className={`${styles.control} ${
+          !formInputValidity.streetIsValid && styles.invalid
+        }`}
+      >
         <label htmlFor="street">Street</label>
         <input ref={streetInputRef} type="text" id="street" />
         {!formInputValidity.streetIsValid && <p>Street field is not valid!</p>}
       </div>
-      <div className={`${styles.control} ${!formInputValidity.postalCodeIsValid && styles.invalid}`}>
+      <div
+        className={`${styles.control} ${
+          !formInputValidity.postalCodeIsValid && styles.invalid
+        }`}
+      >
         <label htmlFor="postal">Postal Code</label>
         <input ref={postalCodeInputRef} type="text" id="postal" />
         {!formInputValidity.postalCodeIsValid && (
           <p>Postal code field is not valid! ( 5 charachters long )</p>
         )}
       </div>
-      <div className={`${styles.control} ${!formInputValidity.cityIsValid && styles.invalid}`}>
+      <div
+        className={`${styles.control} ${
+          !formInputValidity.cityIsValid && styles.invalid
+        }`}
+      >
         <label htmlFor="city">City</label>
         <input ref={cityInputRef} type="text" id="city" />
-        {!formInputValidity.cityIsValidd && <p>City field is not valid!</p>}
+        {!formInputValidity.cityIsValid && <p>City field is not valid!</p>}
       </div>
 
       <div className={styles.actions}>

@@ -4,11 +4,19 @@ import CartItem from "./CartItem";
 import Modal from "../UI/Modal/Modal";
 import CartContext from "../../store/cart-context";
 import Checkout from "./Checkout";
+import useHttp from "../../hooks/use-http";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Cart = (props) => {
   const cartCtx = useContext(CartContext);
   const totalAmount = `$ ${cartCtx.totalAmount.toFixed(2)}`;
   const [isCheckout, setIsCheckout] = useState(false);
+  const {
+    isLoading: isSubmitting,
+    error,
+    sendRequest: createOrder,
+  } = useHttp();
 
   const hasItems = cartCtx.items.length > 0;
 
@@ -31,7 +39,7 @@ const Cart = (props) => {
     />
   ));
 
-  const submititemHandler = (event) => {
+  const submitItemHandler = (event) => {
     event.preventDefault();
     console.log("item has been given successfully!");
   };
@@ -40,9 +48,28 @@ const Cart = (props) => {
     setIsCheckout(true);
   };
 
-  return (
-    <Modal onHideCart={props.onHideCart}>
-      <form onSubmit={submititemHandler}>
+  const submitOrderHandler = (data) => {
+    const notifyAndClearCart = () => {
+      toast("An order has been received!");
+      cartCtx.clearCart();
+    };
+
+    createOrder(
+      {
+        url: "https://react-http-6f76f-default-rtdb.europe-west1.firebasedatabase.app/orders.json",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: { userData: data, orderedItems: cartCtx.items },
+      },
+      notifyAndClearCart
+    );
+  };
+
+  const content = (
+    <React.Fragment>
+      <form onSubmit={submitItemHandler}>
         <ul className={styles["cart-items"]}>{cartItems}</ul>
         <div>
           <div className={styles.total}>
@@ -71,7 +98,25 @@ const Cart = (props) => {
           )}
         </div>
       </form>
-      {isCheckout && <Checkout onOrderCancel={props.onHideCart} />}
+      {isCheckout && (
+        <Checkout
+          onConfirm={submitOrderHandler}
+          onOrderCancel={props.onHideCart}
+        />
+      )}
+      <ToastContainer position="bottom-right" autoClose={2500} />
+    </React.Fragment>
+  );
+
+  const isSubmittingContent = <p>Submitting order...</p>;
+
+  const errorFoundContent = <h3>Error : {error}</h3>;
+
+  return (
+    <Modal onHideCart={props.onHideCart}>
+      {isSubmitting && !error && isSubmittingContent}
+      {error && errorFoundContent}
+      {!isSubmitting && !error && content}
     </Modal>
   );
 };
